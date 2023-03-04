@@ -26,8 +26,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
+        if not user.is_authenticated:
+            return False
         return Subscription.objects.filter(user=user, author=obj).exists()
 
     class Meta:
-        fields = ('email', 'id', 'username', 'first_name', 'last_name', 'password', 'is_subscribed')
+        fields = (
+            'email', 'id', 'username', 'first_name', 'last_name', 'password',
+            'is_subscribed')
         model = User

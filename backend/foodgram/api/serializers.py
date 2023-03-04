@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import serializers, status
-from rest_framework.exceptions import ValidationError
+from rest_framework import serializers
 
 from recipes.models import Favourite
 from recipes.models import ShoppingCart
@@ -28,7 +27,8 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeToIngredientSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(), source='ingredient.id')
+    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),
+                                            source='ingredient.id')
     name = serializers.CharField(
         read_only=True,
         source='ingredient.name'
@@ -47,7 +47,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     author = UserSerializer(default=serializers.CurrentUserDefault())
     tags = TagSerializer(many=True, read_only=True)
-    ingredients = RecipeToIngredientSerializer(many=True, source='recipe_ingredients')
+    ingredients = RecipeToIngredientSerializer(many=True,
+                                               source='recipe_ingredients')
     is_favorited = serializers.SerializerMethodField(
         method_name='get_is_favorited')
     is_in_shopping_cart = serializers.SerializerMethodField(
@@ -57,23 +58,28 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return Favourite.objects.filter(user=request.user, recipe_id=obj).exists()
+        return Favourite.objects.filter(user=request.user,
+                                        recipe_id=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return ShoppingCart.objects.filter(user=request.user, recipe_id=obj).exists()
+        return ShoppingCart.objects.filter(user=request.user,
+                                           recipe_id=obj).exists()
 
     class Meta:
-        fields = ('id', 'tags', 'author', 'ingredients', 'name', 'image', 'cooking_time', 'text',
-                  'is_favorited',
-                  'is_in_shopping_cart')
+        fields = (
+        'id', 'tags', 'author', 'ingredients', 'name', 'image', 'cooking_time',
+        'text',
+        'is_favorited',
+        'is_in_shopping_cart')
         model = Recipe
 
 
 class RecipePostSerializer(RecipeSerializer):
-    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
+    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),
+                                              many=True)
 
     def create(self, validated_data):
         validated_data.pop('recipe_ingredients')
@@ -92,6 +98,7 @@ class RecipePostSerializer(RecipeSerializer):
                                               amount=amount)
         instance.tags.set(tags)
         return instance
+
 
 class FavouriteSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
