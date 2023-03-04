@@ -23,7 +23,7 @@ class TestUsers:
 
     def test_get_users(self, user_client):
         """Аутентифицированный пользователь может получить список юзеров."""
-        response = user_client.get('/api/users/')
+        response = user_client.get('/api/users/', )
         test_data = response.json()[0]
 
         assert response.status_code == status.HTTP_200_OK
