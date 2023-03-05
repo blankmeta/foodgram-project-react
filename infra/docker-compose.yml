@@ -69,8 +69,8 @@ services:
       - ./.env
 
   backend:
-#    build: ../backend/foodgram/
-    image: blankmeta/foodgram-backend
+    build: ../backend/foodgram/
+#    image: blankmeta/foodgram-backend:latest
     volumes:
       - ../static/:/app/static/
       - ../media/:/app/media/recipes/
