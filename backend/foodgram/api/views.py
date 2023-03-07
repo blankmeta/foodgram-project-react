@@ -45,7 +45,6 @@ class IngredientViewSet(ModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     serializer_class = RecipeSerializer
-    # queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
@@ -117,17 +116,6 @@ class RecipeViewSet(ModelViewSet):
         response = HttpResponse(content, 'Content-Type: application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{file}.pdf"'
         return response
-
-
-# class FavouriteViewSet(ModelViewSet):
-#     serializer_class = FavouriteSerializer
-#
-#     # queryset = Favourite.objects.all()
-#     def get_queryset(self):
-#         queryset = Favourite.objects.annotate(
-#             is_favorited=Favourite.objects.filter(user=self.request.user,
-#                                                   recipe_id=1).exists())
-#         return queryset
 
 
 class CreateDestroySubscribeViewSet(mixins.CreateModelMixin,

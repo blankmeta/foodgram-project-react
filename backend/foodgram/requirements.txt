@@ -44,3 +44,4 @@ toml==0.10.2
 tomli==2.0.1
 uritemplate==4.1.1
 urllib3==1.26.14
+drf_base64==2.0
