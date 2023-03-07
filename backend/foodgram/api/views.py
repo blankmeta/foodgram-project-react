@@ -7,6 +7,7 @@ from rest_framework import status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from django.db.models import Exists, OuterRef
 
 from recipes.models import ShoppingCart, Recipe, RecipeToIngredient
 from recipes.models import Tag, Ingredient, Favourite
@@ -44,13 +45,19 @@ class IngredientViewSet(ModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     serializer_class = RecipeSerializer
-    queryset = Recipe.objects.all()
+    # queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
     def get_serializer_class(self):
         return (super().get_serializer_class() if self.request.method == 'GET'
                 else RecipePostSerializer)
+
+    def get_queryset(self):
+        is_favorited_queryset = Favourite.objects.filter(
+            recipe=OuterRef('pk'), user=self.request.user)
+        return Recipe.objects.all().annotate(
+            is_favorited=Exists(is_favorited_queryset))
 
     @action(['post', 'delete'], detail=True)
     def shopping_cart(self, request, pk=None, *args, **kwargs):
@@ -112,9 +119,15 @@ class RecipeViewSet(ModelViewSet):
         return response
 
 
-class FavouriteViewSet(ModelViewSet):
-    serializer_class = FavouriteSerializer
-    queryset = Favourite.objects.all()
+# class FavouriteViewSet(ModelViewSet):
+#     serializer_class = FavouriteSerializer
+#
+#     # queryset = Favourite.objects.all()
+#     def get_queryset(self):
+#         queryset = Favourite.objects.annotate(
+#             is_favorited=Favourite.objects.filter(user=self.request.user,
+#                                                   recipe_id=1).exists())
+#         return queryset
 
 
 class CreateDestroySubscribeViewSet(mixins.CreateModelMixin,
