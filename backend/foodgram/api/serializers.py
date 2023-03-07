@@ -95,6 +95,24 @@ class RecipePostSerializer(RecipeSerializer):
         instance.tags.set(tags)
         return instance
 
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('recipe_ingredients')
+        instance = super().update(instance, validated_data)
+        instance.tags.clear()
+        instance.tags.set(tags)
+        instance.ingredients.clear()
+        objs = []
+        for ingredient in ingredients:
+            objs.append(RecipeToIngredient(
+                ingredient=Ingredient.objects.get(
+                    id=ingredient['ingredient']['id'].id),
+                recipe=instance,
+                amount=ingredient['amount']))
+        RecipeToIngredient.objects.bulk_create(objs)
+        instance.save()
+        return instance
+
 
 class FavouriteSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
