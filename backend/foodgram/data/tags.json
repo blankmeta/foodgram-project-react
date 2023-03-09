@@ -1,14 +1,14 @@
 [
   {
     "name": "Завтрак",
-    "hex_code": "#123321"
+    "color": "#123321"
   },
   {
     "name": "Обед",
-    "hex_code": "#113F21"
+    "color": "#113F21"
   },
   {
     "name": "Ужин",
-    "hex_code": "#FFFFFF"
+    "color": "#FF11FF"
   }
 ]
