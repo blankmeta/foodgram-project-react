@@ -16,6 +16,7 @@ DEBUG = True
 
 LOCAL = False
 
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
