@@ -8,8 +8,8 @@ services:
       - ./.env
 
   backend:
-    build: ../backend/foodgram/
-#    image: blankmeta/foodgram-backend:latest
+#    build: ../backend/foodgram/
+    image: blankmeta/foodgram-backend:latest
     volumes:
       - ../static/:/app/static/
       - ../media/:/app/media/recipes/
@@ -24,9 +24,10 @@ services:
       gunicorn --bind 0:8000 foodgram.wsgi"
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+#    build:
+#      context: ../frontend
+#      dockerfile: Dockerfile
+    image: blankmeta/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
 
