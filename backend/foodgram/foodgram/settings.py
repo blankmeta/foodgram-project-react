@@ -18,6 +18,8 @@ LOCAL = False
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '84.201.178.138']
+CSRF_TRUSTED_ORIGINS = ['https://*.84.201.178.138', 'https://*.127.0.0.1',
+                        'http://*.84.201.178.138', 'http://*.127.0.0.1',]
 
 # Application definition
 
