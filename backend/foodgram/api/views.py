@@ -13,7 +13,7 @@ from django.db.models import Exists, OuterRef
 from recipes.models import ShoppingCart, Recipe, RecipeToIngredient
 from recipes.models import Tag, Ingredient, Favourite
 from users.models import Subscription
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientFilter
 from .serializers import (TagSerializer, IngredientSerializer,
                           RecipeSerializer,
                           FavouriteSerializer,
@@ -41,6 +41,8 @@ class TagViewSet(ModelViewSet):
 class IngredientViewSet(ModelViewSet):
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientFilter
     pagination_class = None
 
 
