@@ -23,7 +23,7 @@ class RecipeToIngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'hex_code', 'slug')
+    list_display = ('name', 'color', 'slug')
     list_filter = ('name',)
 
 
