@@ -9,7 +9,7 @@ class Command(Filler):
         for tag in data:
             try:
                 Tag.objects.get_or_create(name=tag['name'],
-                                          hex_code=tag['hex_code'])
+                                          color=tag['color'])
                 print(f'{tag["name"]} is  successfully created')
             except IntegrityError as e:
                 print('Ingredient is already in base.')
