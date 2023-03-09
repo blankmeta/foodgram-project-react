@@ -7,7 +7,7 @@ User = get_user_model()
 
 class Tag(models.Model):
     name = models.CharField(max_length=200)
-    hex_code = models.CharField(max_length=7)
+    color = models.CharField(max_length=7)
     slug = models.CharField(max_length=200)
 
     def save(self, force_insert=False, force_update=False, using=None,
