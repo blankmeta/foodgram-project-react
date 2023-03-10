@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from recipes.models import Favourite
 from recipes.models import ShoppingCart
-from recipes.models import Tag, Ingredient, Recipe, RecipeToIngredient
+from recipes.models import Tag, Ingredient, Recipe, RecipeIngredient
 from users.models import Subscription
 from users.serializers import UserSerializer
 
@@ -26,7 +26,7 @@ class IngredientSerializer(serializers.ModelSerializer):
         model = Ingredient
 
 
-class RecipeToIngredientSerializer(serializers.ModelSerializer):
+class RecipeIngredientSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),
                                             source='ingredient.id')
     name = serializers.CharField(
@@ -40,15 +40,15 @@ class RecipeToIngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ('id', 'amount', 'name', 'measurement_unit')
-        model = RecipeToIngredient
+        model = RecipeIngredient
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     author = UserSerializer(default=serializers.CurrentUserDefault())
     tags = TagSerializer(many=True, read_only=True)
-    ingredients = RecipeToIngredientSerializer(many=True,
-                                               source='recipe_ingredients')
+    ingredients = RecipeIngredientSerializer(many=True,
+                                             source='recipe_ingredients')
     is_favorited = serializers.BooleanField(required=False)
     is_in_shopping_cart = serializers.SerializerMethodField(
         method_name='get_is_in_shopping_cart')
@@ -88,10 +88,10 @@ class RecipePostSerializer(RecipeSerializer):
             ingredient_id = ingredient['id']
             amount = ingredient['amount']
             ingredient = get_object_or_404(Ingredient, id=ingredient_id)
-            objs.append(RecipeToIngredient(recipe=instance,
+            objs.append(RecipeIngredient(recipe=instance,
                                            ingredient=ingredient,
                                            amount=amount))
-        RecipeToIngredient.objects.bulk_create(objs)
+        RecipeIngredient.objects.bulk_create(objs)
         instance.tags.set(tags)
         return instance
 
@@ -104,12 +104,12 @@ class RecipePostSerializer(RecipeSerializer):
         instance.ingredients.clear()
         objs = []
         for ingredient in ingredients:
-            objs.append(RecipeToIngredient(
+            objs.append(RecipeIngredient(
                 ingredient=Ingredient.objects.get(
                     id=ingredient['ingredient']['id'].id),
                 recipe=instance,
                 amount=ingredient['amount']))
-        RecipeToIngredient.objects.bulk_create(objs)
+        RecipeIngredient.objects.bulk_create(objs)
         instance.save()
         return instance
 

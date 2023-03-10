@@ -29,7 +29,7 @@ class Recipe(models.Model):
     image = models.ImageField(upload_to='recipes/images/')
     text = models.CharField(max_length=2000)
     ingredients = models.ManyToManyField(Ingredient,
-                                         through='RecipeToIngredient',
+                                         through='RecipeIngredient',
                                          related_name='recipes')
     tags = models.ManyToManyField(Tag, related_name='recipes')
     cooking_time = models.FloatField()
@@ -39,7 +39,7 @@ class Recipe(models.Model):
         ordering = ('-pub_date',)
 
 
-class RecipeToIngredient(models.Model):
+class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
                                related_name='recipe_ingredients')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,

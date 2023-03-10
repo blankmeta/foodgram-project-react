@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from django.db.models import Exists, OuterRef
 
-from recipes.models import ShoppingCart, Recipe, RecipeToIngredient
+from recipes.models import ShoppingCart, Recipe, RecipeIngredient
 from recipes.models import Tag, Ingredient, Favourite
 from users.models import Subscription
 from .filters import RecipeFilter, IngredientFilter
@@ -108,7 +108,7 @@ class RecipeViewSet(ModelViewSet):
     @action(methods=('get',), detail=False, )
     def download_shopping_cart(self, request):
         content = "Your shopping list: \n\n"
-        ingredients = RecipeToIngredient.objects.filter(
+        ingredients = RecipeIngredient.objects.filter(
             recipe__cart__user=request.user).values(
             'ingredient__name', 'ingredient__measurement_unit').annotate(
             amount=Sum('amount'))
