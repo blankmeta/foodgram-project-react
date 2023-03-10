@@ -89,8 +89,8 @@ class RecipePostSerializer(RecipeSerializer):
             amount = ingredient['amount']
             ingredient = get_object_or_404(Ingredient, id=ingredient_id)
             objs.append(RecipeIngredient(recipe=instance,
-                                           ingredient=ingredient,
-                                           amount=amount))
+                                         ingredient=ingredient,
+                                         amount=amount))
         RecipeIngredient.objects.bulk_create(objs)
         instance.tags.set(tags)
         return instance
