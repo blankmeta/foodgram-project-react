@@ -20,7 +20,6 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*'])
 CSRF_TRUSTED_ORIGINS = ['https://*.84.201.178.138', 'https://*.127.0.0.1',
                         'http://*.84.201.178.138', 'http://*.127.0.0.1']
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,7 +33,7 @@ INSTALLED_APPS = [
     'djoser',
 
     'users',
-'recipes.apps.RecipesConfig',
+    'recipes.apps.RecipesConfig',
 ]
 
 MIDDLEWARE = [
@@ -67,13 +66,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'sqlite3',
     } if LOCAL else {
-        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'ENGINE': os.getenv('DB_ENGINE',
+                            default='django.db.backends.postgresql'),
         'NAME': os.getenv('DB_NAME', default='postgres'),
         'USER': os.getenv('POSTGRES_USER', default='postgres'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
