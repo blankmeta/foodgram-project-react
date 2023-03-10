@@ -4,6 +4,7 @@ from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from api.pagination import PageLimitPagination
 from api.serializers import SubscriptionSerializer
@@ -18,10 +19,15 @@ class CustomUserViewSet(UserViewSet):
     serializer_class = UserSerializer
     pagination_class = PageLimitPagination
 
+
+class SubscribeUserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
     @action(methods=['post', 'delete'], detail=True)
     def subscribe(self, request, **kwargs):
         user = request.user
-        author_id = self.kwargs.get('id')
+        author_id = self.kwargs.get('pk')
         author = get_object_or_404(User, id=author_id)
 
         if request.method == 'POST':

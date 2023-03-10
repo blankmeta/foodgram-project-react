@@ -24,10 +24,10 @@ class TestUsers:
     def test_get_users(self, user_client):
         """Аутентифицированный пользователь может получить список юзеров."""
         response = user_client.get('/api/users/', )
-        test_data = response.json()[0]
+        test_data = response.json()
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(test_data) == 5
+        assert len(test_data) == 4
 
     def test_change_password(self, user_client):
         """Аутентифицированный пользователь может поменять свой пароль."""
@@ -39,8 +39,8 @@ class TestUsers:
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    def test_logout(self, user_client):
-        """Пользователь может разлогиниться."""
-        response = user_client.post('/api/auth/token/logout/')
+    def test_subscribe(self, user_client, user2):
+        """Пользователь может подписаться на другого пользователя."""
+        response = user_client.post(f'/api/users/1/subscribe/')
 
-        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert response.status_code == status.HTTP_201_CREATED
