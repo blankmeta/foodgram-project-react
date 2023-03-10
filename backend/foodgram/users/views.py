@@ -23,6 +23,7 @@ class CustomUserViewSet(UserViewSet):
 class SubscribeUserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    pagination_class = PageLimitPagination
 
     @action(methods=['post', 'delete'], detail=True)
     def subscribe(self, request, **kwargs):
