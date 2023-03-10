@@ -60,9 +60,15 @@ class RecipeViewSet(ModelViewSet):
         if self.request.user.is_authenticated:
             is_favorited_queryset = Favourite.objects.filter(
                 recipe=OuterRef('pk'), user=self.request.user)
+            is_in_shopping_cart_queryset = ShoppingCart.objects.filter(
+                recipe=OuterRef('pk'), user=self.request.user)
             return Recipe.objects.all().annotate(
-                is_favorited=Exists(is_favorited_queryset))
-        return Recipe.objects.all()
+                is_favorited=Exists(is_favorited_queryset),
+                is_in_shopping_cart=Exists(is_in_shopping_cart_queryset)
+            )
+        return Recipe.objects.select_related(
+            'author').prefetch_related(
+            'ingredients', 'tags').all()
 
     @action(['post', 'delete'], detail=True)
     def shopping_cart(self, request, pk=None, *args, **kwargs):
