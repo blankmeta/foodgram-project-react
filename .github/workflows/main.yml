@@ -85,8 +85,7 @@ jobs:
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
           
           sudo docker-compose up -d --build
-          sudo docker-compose exec -T backend python manage.py fill_ingredients ingredients.json
-          sudo docker-compose exec -T backend python manage.py fill_tags tags.json
+          sudo docker image prune # Удаление старых висящих образов
 
   send_message:
     runs-on: ubuntu-latest
