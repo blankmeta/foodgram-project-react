@@ -12,6 +12,11 @@ Ip - http://84.201.178.138/
 ```
 docker-compose up -d --build
 ```
+### Заполните базу ингредиентами и тегами
+```
+docker-compose exec -T backend python manage.py fill_ingredients ingredients.json
+docker-compose exec -T backend python manage.py fill_tags tags.json
+```
 
 # Шаблон наполнения .env
 ```
