@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Exists, OuterRef
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -8,7 +9,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from django.db.models import Exists, OuterRef
 
 from recipes.models import ShoppingCart, Recipe, RecipeIngredient
 from recipes.models import Tag, Ingredient, Favourite
@@ -62,7 +62,9 @@ class RecipeViewSet(ModelViewSet):
                 recipe=OuterRef('pk'), user=self.request.user)
             is_in_shopping_cart_queryset = ShoppingCart.objects.filter(
                 recipe=OuterRef('pk'), user=self.request.user)
-            return Recipe.objects.all().annotate(
+            return Recipe.objects.select_related(
+                'author').prefetch_related(
+                'ingredients', 'tags').all().annotate(
                 is_favorited=Exists(is_favorited_queryset),
                 is_in_shopping_cart=Exists(is_in_shopping_cart_queryset)
             )
@@ -88,7 +90,7 @@ class RecipeViewSet(ModelViewSet):
                     return Response(
                         serializer.data, status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        elif request.method == 'DELETE':
+        if request.method == 'DELETE':
             return delete_if_exists(request, pk, ShoppingCart)
 
     @action(['post', 'delete'], detail=True)
@@ -108,7 +110,7 @@ class RecipeViewSet(ModelViewSet):
                                     status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_400_BAD_REQUEST,
                             data='You already have this recipe as favourite')
-        elif request.method == 'DELETE':
+        if request.method == 'DELETE':
             return delete_if_exists(request, pk, Favourite)
 
     @action(methods=('get',), detail=False, )
