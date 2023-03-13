@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin import display
 
 from recipes.models import (Recipe, Ingredient, Tag, ShoppingCart, Favourite,
                             RecipeIngredient)
@@ -6,8 +7,12 @@ from recipes.models import (Recipe, Ingredient, Tag, ShoppingCart, Favourite,
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id', 'author')
+    list_display = ('name', 'id', 'author', 'favorites')
     list_filter = ('author', 'name', 'tags')
+
+    @staticmethod
+    def favorites(obj):
+        return obj.favourite.count()
 
 
 @admin.register(Ingredient)
