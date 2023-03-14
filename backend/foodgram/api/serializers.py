@@ -62,6 +62,11 @@ class RecipeSerializer(serializers.ModelSerializer):
             'is_in_shopping_cart')
         model = Recipe
 
+    def validate_cooking_time(self, value):
+        if value == 0:
+            raise ValidationError('Cooking time can not be a zero')
+        return value
+
     def validate_ingredients(self, value):
         ingredients_set = set()
         for ingredient in value:
