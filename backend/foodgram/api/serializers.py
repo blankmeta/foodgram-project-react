@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from recipes.models import Favourite
 from recipes.models import ShoppingCart
@@ -60,6 +61,19 @@ class RecipeSerializer(serializers.ModelSerializer):
             'is_favorited',
             'is_in_shopping_cart')
         model = Recipe
+
+    def validate_ingredients(self, value):
+        ingredients_set = set()
+        for ingredient in value:
+            ingredient_obj = ingredient.get('ingredient').get('id')
+            if ingredient.get('amount') == 0:
+                raise ValidationError(f'Amount of {ingredient_obj.name} can '
+                                      f'not be a zero')
+            if ingredient_obj in ingredients_set:
+                raise ValidationError(f'{ingredient_obj.name} is added '
+                                      f'multiple times')
+            ingredients_set.add(ingredient_obj)
+        return value
 
 
 class RecipePostSerializer(RecipeSerializer):
