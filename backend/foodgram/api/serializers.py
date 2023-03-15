@@ -72,11 +72,18 @@ class RecipeSerializer(serializers.ModelSerializer):
         for ingredient in value:
             ingredient_obj = ingredient.get('ingredient').get('id')
             if ingredient.get('amount') == 0:
-                raise ValidationError(f'Amount of {ingredient_obj.name} can '
-                                      f'not be a zero')
+                data = [{
+                    'amount_error': [f'Amount of {ingredient_obj.name} can '
+                                    f'not be a zero']
+                }]
+                raise ValidationError(data)
             if ingredient_obj in ingredients_set:
-                raise ValidationError(f'{ingredient_obj.name} is added '
-                                      f'multiple times')
+                data = [{
+                    'multiple_ingredients_error':
+                        [f'{ingredient_obj.name} is added '
+                        f'multiple times']
+                }]
+                raise ValidationError(data)
             ingredients_set.add(ingredient_obj)
         return value
 
