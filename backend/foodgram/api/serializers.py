@@ -73,15 +73,14 @@ class RecipeSerializer(serializers.ModelSerializer):
             ingredient_obj = ingredient.get('ingredient').get('id')
             if ingredient.get('amount') == 0:
                 data = [{
-                    'amount_error': [f'Amount of {ingredient_obj.name} can '
-                                    f'not be a zero']
+                    'amount_error': [f'Количество {ingredient_obj.name} не '
+                                     f'может быть равным нулю']
                 }]
                 raise ValidationError(data)
             if ingredient_obj in ingredients_set:
                 data = [{
                     'multiple_ingredients_error':
-                        [f'{ingredient_obj.name} is added '
-                        f'multiple times']
+                        [f'{ingredient_obj.name} добавлен несколько раз']
                 }]
                 raise ValidationError(data)
             ingredients_set.add(ingredient_obj)
