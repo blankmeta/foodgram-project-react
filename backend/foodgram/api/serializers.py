@@ -64,7 +64,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate_cooking_time(self, value):
         if value == 0:
-            raise ValidationError('Cooking time can not be a zero')
+            raise ValidationError('Время готовки не может быть нулевым')
         return value
 
     def validate_ingredients(self, value):
