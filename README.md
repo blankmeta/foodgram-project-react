@@ -1,11 +1,5 @@
 # praktikum_new_diplom
 
-```
-Ip - http://84.201.178.138/
-Логпасс админки - root:root
-Пользователи - admin@gmail.com:admin, lena@gmail.com:lena
-```
-
 # Запуск:
 
 ### Поднимите контейнеры в директории ./infra
